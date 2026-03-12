@@ -16,15 +16,22 @@ struct Student {
 };
 
 double vidurkis(const vector<int>& nd) {
+
+    if (nd.empty()) return 0;
+
     double sum = 0;
-    for (int x : nd) sum += x;
-    return nd.empty() ? 0 : sum / nd.size();
+    for (int x : nd)
+        sum += x;
+
+    return sum / nd.size();
 }
 
 double mediana(vector<int> nd) {
+
     if (nd.empty()) return 0;
 
     sort(nd.begin(), nd.end());
+
     int n = nd.size();
 
     if (n % 2 == 0)
@@ -41,17 +48,27 @@ double galutinisMed(const Student& s) {
     return 0.4 * mediana(s.nd) + 0.6 * s.egz;
 }
 
-vector<Student> readFile(string filename) {
+vector<Student> readFile(const string& filename) {
 
     ifstream fin(filename);
+
+    if (!fin) {
+        cout << "Nepavyko atidaryti failo: " << filename << endl;
+        exit(1);
+    }
+
     vector<Student> students;
 
     string line;
+
     getline(fin, line); // skip header
 
     while (getline(fin, line)) {
 
+        if (line.empty()) continue;
+
         stringstream ss(line);
+
         Student s;
 
         ss >> s.vardas >> s.pavarde;
@@ -61,6 +78,8 @@ vector<Student> readFile(string filename) {
 
         while (ss >> x)
             grades.push_back(x);
+
+        if (grades.size() < 2) continue;
 
         s.egz = grades.back();
         grades.pop_back();
@@ -73,7 +92,7 @@ vector<Student> readFile(string filename) {
     return students;
 }
 
-void printStudents(const vector<Student>& st) {
+void printStudents(const vector<Student>& students) {
 
     cout << left << setw(15) << "Vardas"
          << setw(15) << "Pavarde"
@@ -85,7 +104,7 @@ void printStudents(const vector<Student>& st) {
 
     cout << fixed << setprecision(2);
 
-    for (const auto& s : st) {
+    for (const auto& s : students) {
 
         cout << setw(15) << s.vardas
              << setw(15) << s.pavarde
@@ -107,9 +126,16 @@ int main() {
 
     string filename;
 
-    if (choice == 1) filename = "studentai10000.txt";
-    if (choice == 2) filename = "studentai100000.txt";
-    if (choice == 3) filename = "studentai1000000.txt";
+    if (choice == 1)
+        filename = "studentai10000.txt";
+    else if (choice == 2)
+        filename = "studentai100000.txt";
+    else if (choice == 3)
+        filename = "studentai1000000.txt";
+    else {
+        cout << "Neteisingas pasirinkimas\n";
+        return 1;
+    }
 
     vector<Student> students = readFile(filename);
 
@@ -151,6 +177,10 @@ int main() {
                  return galutinisMed(a) < galutinisMed(b);
              });
         break;
+
+    default:
+        cout << "Blogas rikiavimo pasirinkimas\n";
+        return 1;
     }
 
     printStudents(students);
