@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -41,28 +42,29 @@ double galutinisMed(const Student& s) {
 }
 
 vector<Student> readFile(string filename) {
+
     ifstream fin(filename);
     vector<Student> students;
 
-    string vardas, pavarde;
+    string line;
+    getline(fin, line); // skip header
 
-    fin >> vardas >> pavarde; // skip header
+    while (getline(fin, line)) {
 
-    while (fin) {
+        stringstream ss(line);
         Student s;
 
-        fin >> s.vardas >> s.pavarde;
-        if (!fin) break;
+        ss >> s.vardas >> s.pavarde;
 
-        int x;
         vector<int> grades;
+        int x;
 
-        for (int i = 0; i < 5; i++) {
-            fin >> x;
+        while (ss >> x)
             grades.push_back(x);
-        }
 
-        fin >> s.egz;
+        s.egz = grades.back();
+        grades.pop_back();
+
         s.nd = grades;
 
         students.push_back(s);
@@ -84,6 +86,7 @@ void printStudents(const vector<Student>& st) {
     cout << fixed << setprecision(2);
 
     for (const auto& s : st) {
+
         cout << setw(15) << s.vardas
              << setw(15) << s.pavarde
              << setw(20) << galutinisVid(s)
@@ -94,45 +97,59 @@ void printStudents(const vector<Student>& st) {
 
 int main() {
 
-    vector<Student> students = readFile("kursiokai.txt");
-
-    cout << "Rikiavimo pasirinkimas:\n";
-    cout << "1 - Vardas\n";
-    cout << "2 - Pavarde\n";
-    cout << "3 - Galutinis (Vid.)\n";
-    cout << "4 - Galutinis (Med.)\n";
+    cout << "Pasirinkite faila:\n";
+    cout << "1 - studentai10000.txt\n";
+    cout << "2 - studentai100000.txt\n";
+    cout << "3 - studentai1000000.txt\n";
 
     int choice;
     cin >> choice;
 
-    switch (choice) {
+    string filename;
+
+    if (choice == 1) filename = "studentai10000.txt";
+    if (choice == 2) filename = "studentai100000.txt";
+    if (choice == 3) filename = "studentai1000000.txt";
+
+    vector<Student> students = readFile(filename);
+
+    cout << "\nRikiuoti pagal:\n";
+    cout << "1 - Varda\n";
+    cout << "2 - Pavarde\n";
+    cout << "3 - Galutini (Vid.)\n";
+    cout << "4 - Galutini (Med.)\n";
+
+    int sortChoice;
+    cin >> sortChoice;
+
+    switch (sortChoice) {
 
     case 1:
         sort(students.begin(), students.end(),
-            [](const Student& a, const Student& b) {
-                return a.vardas < b.vardas;
-            });
+             [](const Student& a, const Student& b) {
+                 return a.vardas < b.vardas;
+             });
         break;
 
     case 2:
         sort(students.begin(), students.end(),
-            [](const Student& a, const Student& b) {
-                return a.pavarde < b.pavarde;
-            });
+             [](const Student& a, const Student& b) {
+                 return a.pavarde < b.pavarde;
+             });
         break;
 
     case 3:
         sort(students.begin(), students.end(),
-            [](const Student& a, const Student& b) {
-                return galutinisVid(a) < galutinisVid(b);
-            });
+             [](const Student& a, const Student& b) {
+                 return galutinisVid(a) < galutinisVid(b);
+             });
         break;
 
     case 4:
         sort(students.begin(), students.end(),
-            [](const Student& a, const Student& b) {
-                return galutinisMed(a) < galutinisMed(b);
-            });
+             [](const Student& a, const Student& b) {
+                 return galutinisMed(a) < galutinisMed(b);
+             });
         break;
     }
 
