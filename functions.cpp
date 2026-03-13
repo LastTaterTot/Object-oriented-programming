@@ -142,3 +142,78 @@ void sortStudents(vector<Student>& students, int choice) {
         throw runtime_error("Klaida: neteisingas rikiavimo pasirinkimas.");
     }
 }
+
+#include <random>
+#include <chrono>
+
+void generateFile(const string& filename, int studentCount) {
+
+    ofstream fout(filename);
+
+    if (!fout)
+        throw runtime_error("Nepavyko sukurti failo.");
+
+    fout << "Vardas Pavarde ";
+    for(int i=1;i<=15;i++)
+        fout << "ND" << i << " ";
+    fout << "Egz\n";
+
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dist(1,10);
+
+    for(int i=1;i<=studentCount;i++) {
+
+        fout << "Vardas" << i << " Pavarde" << i << " ";
+
+        for(int j=0;j<15;j++)
+            fout << dist(gen) << " ";
+
+        fout << dist(gen) << "\n";
+    }
+}
+
+void splitStudents(
+    const vector<Student>& students,
+    vector<Student>& vargsiukai,
+    vector<Student>& kietiakai
+){
+
+    for(const auto& s : students){
+
+        if(galutinisVid(s) < 5)
+            vargsiukai.push_back(s);
+        else
+            kietiakai.push_back(s);
+    }
+}
+
+void writeStudentsToFile(
+    const string& filename,
+    const vector<Student>& students
+){
+
+    ofstream fout(filename);
+
+    if(!fout)
+        throw runtime_error("Nepavyko sukurti rezultatu failo.");
+
+    fout << left << setw(15) << "Vardas"
+         << setw(15) << "Pavarde"
+         << setw(20) << "Galutinis(Vid.)"
+         << setw(20) << "Galutinis(Med.)"
+         << "\n";
+
+    fout << string(70,'-') << "\n";
+
+    fout << fixed << setprecision(2);
+
+    for(const auto& s : students){
+
+        fout << setw(15) << s.vardas
+             << setw(15) << s.pavarde
+             << setw(20) << galutinisVid(s)
+             << setw(20) << galutinisMed(s)
+             << "\n";
+    }
+}
