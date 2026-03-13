@@ -18,3 +18,16 @@ void printStudents(const std::vector<Student>& students);
 void sortStudents(std::vector<Student>& students, int choice);
 
 #endif
+
+void generateFile(const std::string& filename, int studentCount);
+
+void splitStudents(
+    const std::vector<Student>& students,
+    std::vector<Student>& vargsiukai,
+    std::vector<Student>& kietiakai
+);
+
+void writeStudentsToFile(
+    const std::string& filename,
+    const std::vector<Student>& students
+);
