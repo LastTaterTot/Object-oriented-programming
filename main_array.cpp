@@ -180,4 +180,22 @@ int main() {
         else if (pasirinkimas == 3) {
             int m, n;
             cout << "Kiek studentu generuoti? "; cin >> m;
-            cout << "Kiek ND generuoti kiekvienam? "; cin >>
+            cout << "Kiek ND generuoti kiekvienam? ";             cin >> n;
+
+            for (int i = 0; i < m; i++) {
+                if (studKiek >= MAX_STUD) {
+                    cout << "Pasiektas MAX_STUD limitas (" << MAX_STUD << ").\n";
+                    break;
+                }
+                studentai[studKiek++] = generateStudent_all(i + 1, n);
+            }
+            printTable(studentai, studKiek, naudotiMediana);
+        }
+        else {
+            cout << "Neteisingas pasirinkimas. Bandykite dar karta.\n";
+        }
+    }
+
+    cout << "\nPrograma baigta.\n";
+    return 0;
+}
