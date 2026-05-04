@@ -2,32 +2,34 @@
 #define FUNCTIONS_H
 
 #include "student.h"
-#include <vector>
 #include <string>
 
-double vidurkis(const std::vector<int>& nd);
-double mediana(std::vector<int> nd);
+// FILE GENERATION
+void generateFile(const std::string& filename, int count);
 
-double galutinisVid(const Student& s);
-double galutinisMed(const Student& s);
+// TEMPLATE FUNKCIJOS
+template <typename Container>
+Container readFile(const std::string& filename);
 
-std::vector<Student> readFile(const std::string& filename);
+template <typename Container>
+void splitStrategy1(const Container& students,
+                    Container& vargsiukai,
+                    Container& kietiakai);
 
-void printStudents(const std::vector<Student>& students);
+template <typename Container>
+void splitStrategy2(Container& students,
+                    Container& vargsiukai);
 
-void sortStudents(std::vector<Student>& students, int choice);
+template <typename Container>
+void splitStrategy3(Container& students,
+                    Container& vargsiukai,
+                    Container& kietiakai);
+
+// WRITE
+template <typename Container>
+void writeStudentsToFile(const std::string& filename,
+                         const Container& students);
+
+#include "functions.tpp"
 
 #endif
-
-void generateFile(const std::string& filename, int studentCount);
-
-void splitStudents(
-    const std::vector<Student>& students,
-    std::vector<Student>& vargsiukai,
-    std::vector<Student>& kietiakai
-);
-
-void writeStudentsToFile(
-    const std::string& filename,
-    const std::vector<Student>& students
-);
